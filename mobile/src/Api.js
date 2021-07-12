@@ -42,12 +42,50 @@ export default {
         return json;
     },
 
+    logout: async () => {
+        const token = await AsyncStorage.getItem('token');
+
+        const req = await fetch(`${BASE_API}/auth/logout`, {
+            method: 'POST',
+            headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({token})
+        });
+        const json = await req.json();
+        return json;
+    },
+
     getBarbers: async (lat=null, lng=null, address=null) => {
         const token = await AsyncStorage.getItem('token');
 
         console.log(lat, lng, address);
 
         const req = await fetch(`${BASE_API}/barbers?token=${token}&lat=${lat}&lng=${lng}&address=${address}`);
+        const json = await req.json();
+        return json;
+    },
+
+    getBarber: async (id) => {
+        const token = await AsyncStorage.getItem('token');
+        const req = await fetch(`${BASE_API}/barber/${id}?token=${token}`);
+        const json = await req.json();
+        console.log(json);
+        return json;
+    },
+
+    setFavorite: async (barberId) => {
+        const token = await AsyncStorage.getItem('token');
+
+        const req = await fetch(`${BASE_API}/user/favorite`, {
+            method: 'POST',
+            headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({barber:barberId})
+        });
         const json = await req.json();
         return json;
     }
